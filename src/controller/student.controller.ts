@@ -50,9 +50,28 @@ export const studentRegistration = async (req: Request, res: Response) => {
       },
     });
   } catch (error: any) {
-    return res.status(500).json({
-      success: false,
-      message: error.message || "Something went wrong",
-    });
+    if (error.message === "User does not exist") {
+      return res.status(400).json({
+        success: false,
+        messsage: error.message,
+      });
+    }
+    if (error.message === "Contact your class Teacher") {
+      return res.status(400).json({
+        success: false,
+        messsage: error.message,
+      });
+    }
+    if (error.message === "You are already a student") {
+      return res.status(400).json({
+        success: false,
+        messsage: error.message,
+      });
+    } else {
+      return res.status(400).json({
+        success: false,
+        messsage: error.message,
+      });
+    }
   }
 };

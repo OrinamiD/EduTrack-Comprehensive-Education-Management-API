@@ -8,7 +8,6 @@ import {
   registration,
   verifyOtp,
 } from "../services/auth.service.js";
-import { error } from "console";
 
 export const userRegistration = async (req: Request, res: Response) => {
   try {
@@ -48,7 +47,7 @@ export const userRegistration = async (req: Request, res: Response) => {
         message: error.message,
       });
     } else {
-      return res.status(404).json({
+      return res.status(500).json({
         success: false,
         message: error.message,
       });
@@ -137,18 +136,89 @@ export const userLogin = async (req: Request, res: Response) => {
         },
         accessToken,
       });
-  } catch (error) {}
+  } catch (error: any) {
+    if (error.message === "User does not exist") {
+      return res.status(404).json({
+        success: false,
+        message: error.message,
+      });
+    }
+    if (
+      error.message === "Account not verified. Please check your email for OTP."
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: error.message,
+      });
+    }
+    if (error.message === "Complete your registration") {
+      return res.status(400).json({
+        success: false,
+        message: error.message,
+      });
+    }
+    if (error.message === "Wait while admin verify your details") {
+      return res.status(400).json({
+        success: false,
+        message: error.message,
+      });
+    }
+    if (error.message === "Your account has not been approved") {
+      return res.status(400).json({
+        success: false,
+        message: error.message,
+      });
+    }
+    if (error.message === "Incorrect password or Email") {
+      return res.status(400).json({
+        success: false,
+        message: error.message,
+      });
+    } else {
+      return res.status(500).json({
+        success: false,
+        message: error.message,
+      });
+    }
+  }
 };
 
 // resend otp
 export const resendOTP = async (req: Request, res: Response) => {
-  const { email } = req.body;
+  try {
+    const { email } = req.body;
 
-  const sentOtp = await handleResendOtp(email);
+    const sentOtp = await handleResendOtp(email);
 
-  return res
-    .status(200)
-    .json({ success: true, message: "OTP sent successful. Check your email" });
+    return res.status(200).json({
+      success: true,
+      message: "OTP sent successful. Check your email",
+    });
+  } catch (error: any) {
+    if (error.message === "User does not exist") {
+      return res.status(404).json({
+        success: false,
+        message: error.message,
+      });
+    }
+    if (error.message === "You are already verified!. Login") {
+      return res.status(400).json({
+        success: false,
+        message: error.message,
+      });
+    }
+    if (error.message === "Check your email, its has not expired") {
+      return res.status(400).json({
+        success: false,
+        message: error.message,
+      });
+    } else {
+      return res.status(500).json({
+        success: false,
+        message: error.message,
+      });
+    }
+  }
 };
 
 // forgot password
@@ -169,7 +239,19 @@ export const forgottenPassword = async (req: Request, res: Response) => {
       message: "otp sent successful",
       forgotPasswordData,
     });
-  } catch (error) {}
+  } catch (error: any) {
+    if (error.message === "user does found") {
+      return res.status(404).json({
+        success: false,
+        message: error.message,
+      });
+    } else {
+      return res.status(500).json({
+        success: false,
+        message: error.message,
+      });
+    }
+  }
 };
 
 export const forgottenOTPVerification = async (req: Request, res: Response) => {
@@ -189,10 +271,37 @@ export const forgottenOTPVerification = async (req: Request, res: Response) => {
       message: "Account verified successfully. Login to your account",
     });
   } catch (error: any) {
-    return res.status(400).json({ success: false, message: error.message });
+    if (error.message === "User not found.") {
+      return res.status(404).json({
+        success: false,
+        message: error.message,
+      });
+    }
+    if (error.message === "No OTP set") {
+      return res.status(400).json({
+        success: false,
+        message: error.message,
+      });
+    }
+    if (error.message === "OTP expired") {
+      return res.status(400).json({
+        success: false,
+        message: error.message,
+      });
+    }
+    if (error.message === "Invalid OTP.") {
+      return res.status(400).json({
+        success: false,
+        message: error.message,
+      });
+    } else {
+      return res.status(500).json({
+        success: false,
+        message: error.message,
+      });
+    }
   }
 };
-
 // reset password
 export const resetPassword = async (
   req: Request<{ id: string }>,
@@ -221,5 +330,17 @@ export const resetPassword = async (
         user,
         accessToken,
       });
-  } catch (error) {}
+  } catch (error: any) {
+    if (error.message === "User not found.") {
+      return res.status(404).json({
+        success: false,
+        message: error.message,
+      });
+    } else {
+      return res.status(500).json({
+        success: false,
+        message: error.message,
+      });
+    }
+  }
 };

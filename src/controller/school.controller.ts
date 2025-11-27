@@ -23,5 +23,29 @@ export const createSchool = async (
         ownerName: `${user.firstName}${user.otherName} ${user.lastName}`,
       },
     });
-  } catch (error) {}
+  } catch (error: any) {
+    if (error.message === "User does not exist") {
+      return res.status(404).json({
+        success: false,
+        messsage: error.message,
+      });
+    }
+    if (error.message === "Only the owner can perform this") {
+      return res.status(400).json({
+        success: false,
+        messsage: error.message,
+      });
+    }
+    if (error.message === "School already exist") {
+      return res.status(400).json({
+        success: false,
+        messsage: error.message,
+      });
+    } else {
+      return res.status(500).json({
+        success: false,
+        messsage: error.message,
+      });
+    }
+  }
 };

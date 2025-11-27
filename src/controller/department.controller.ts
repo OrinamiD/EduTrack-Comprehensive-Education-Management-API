@@ -22,5 +22,29 @@ export const craeteDepartment = async (
       messsage: "department created successfully",
       createdDepartment,
     });
-  } catch (error) {}
+  } catch (error: any) {
+    if (error.message === "User not found") {
+      return res.status(404).json({
+        success: false,
+        messsage: error.message,
+      });
+    }
+    if (error.message === "Only owner can perform this operation") {
+      return res.status(400).json({
+        success: false,
+        messsage: error.message,
+      });
+    }
+    if (error.message === "department has already been created") {
+      return res.status(400).json({
+        success: false,
+        messsage: error.message,
+      });
+    } else {
+      return res.status(400).json({
+        success: false,
+        messsage: error.message,
+      });
+    }
+  }
 };

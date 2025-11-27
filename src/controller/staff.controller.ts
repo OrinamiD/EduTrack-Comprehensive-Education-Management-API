@@ -25,5 +25,7 @@ export const staffRegistration = async (req: Request, res: Response) => {
     return res
       .status(200)
       .json({ success: false, message: "successful", savedStaff });
-  } catch (error) {}
+  } catch (error: any) {
+    
+  }
 };
