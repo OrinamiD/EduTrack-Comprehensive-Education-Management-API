@@ -1,0 +1,225 @@
+import { type Request, type Response } from "express";
+import {
+  forgotPassword,
+  forgottenOTPverify,
+  handleResendOtp,
+  login,
+  passwordReset,
+  registration,
+  verifyOtp,
+} from "../services/auth.service.js";
+import { error } from "console";
+
+export const userRegistration = async (req: Request, res: Response) => {
+  try {
+    const registeredUser = await registration(req.body);
+
+    if (!registeredUser) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Can not register this user" });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "registration successful",
+      user: {
+        role: registeredUser.role,
+        school: registeredUser.schoolId,
+        fullName: `${registeredUser.firstName} ${registeredUser.otherName} ${registeredUser.lastName}`,
+        email: registeredUser.email,
+        phone: registeredUser.phone,
+        gender: registeredUser.gender,
+        DOB: registeredUser.DOB,
+        otpVerification: registeredUser.otpVerification,
+        adminVerification: registeredUser.adminVerification,
+        isActive: registeredUser.isOnline,
+      },
+    });
+  } catch (error: any) {
+    if (error.message === "Account already exist") {
+      return res.status(400).json({
+        success: false,
+        message: error.message,
+      });
+    } else if (error.message === "Otp was not generated") {
+      return res.status(400).json({
+        success: false,
+        message: error.message,
+      });
+    } else {
+      return res.status(404).json({
+        success: false,
+        message: error.message,
+      });
+    }
+  }
+};
+
+//verify otp
+export const otpVerification = async (req: Request, res: Response) => {
+  try {
+    const { email, otp } = req.body;
+
+    const users = await verifyOtp(email, otp);
+    if (!users) {
+      return res.status(400).json({
+        success: false,
+        message: "Can not verify otp",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Account verified successfully. Login to your account",
+    });
+  } catch (error: any) {
+    if (error.message === "User not found.") {
+      return res.status(404).json({ success: false, message: error.message });
+    }
+    if (error.message === "No OTP set") {
+      return res.status(400).json({ success: false, message: error.message });
+    }
+    if (error.message === "OTP expired") {
+      return res.status(400).json({ success: false, message: error.message });
+    }
+    if (error.message === "account already verified") {
+      return res.status(400).json({ success: false, message: error.message });
+    }
+    if (error.message === "Invalid OTP.") {
+      return res.status(400).json({ success: false, message: error.message });
+    } else {
+      return res.status(500).json({ success: false, message: error.message });
+    }
+  }
+};
+
+//login
+export const userLogin = async (req: Request, res: Response) => {
+  try {
+    const { email, phone, password, admissionNo } = req.body;
+
+    const { user, accessToken, refreshToken } = await login(
+      email,
+      phone,
+      password,
+      admissionNo
+    );
+
+    return res
+      .cookie("refreshToken", refreshToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production", // only https in prod
+        sameSite: "strict", // prevents CSRF
+        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+      })
+      .status(200)
+      .json({
+        success: true,
+        message: "login successful",
+        userInfo: {
+          school: user.schoolId,
+          role: user.role,
+          id: user.id,
+          Name: `${user.firstName} ${user.otherName} ${user.lastName}`,
+          email: user.email,
+          gender: user.gender,
+          phoneVerification: user.phoneVerification,
+          otpVerification: user.otpVerification,
+          adminVerification: user.adminVerification,
+          hasStaffId: user.hasStaffId,
+          hasclassId: user.hasClassId,
+          hasStudentId: user.hasStudentId,
+          hasSchoolId: user.hasSchoolId,
+          isOnline: user.isOnline,
+          lastlogin: user.lastLogin,
+          lastSeen: user.lastSeen,
+        },
+        accessToken,
+      });
+  } catch (error) {}
+};
+
+// resend otp
+export const resendOTP = async (req: Request, res: Response) => {
+  const { email } = req.body;
+
+  const sentOtp = await handleResendOtp(email);
+
+  return res
+    .status(200)
+    .json({ success: true, message: "OTP sent successful. Check your email" });
+};
+
+// forgot password
+export const forgottenPassword = async (req: Request, res: Response) => {
+  try {
+    const { email, password } = req.body;
+
+    const forgotPasswordData = await forgotPassword(email, password);
+
+    if (!forgotPassword) {
+      return res
+        .status(400)
+        .json({ success: false, message: "can not send otp" });
+    }
+
+    return res.status(400).json({
+      success: true,
+      message: "otp sent successful",
+      forgotPasswordData,
+    });
+  } catch (error) {}
+};
+
+export const forgottenOTPVerification = async (req: Request, res: Response) => {
+  try {
+    const { email, otp } = req.body;
+
+    const users = await forgottenOTPverify(email, otp);
+    if (!users) {
+      return res.status(400).json({
+        success: false,
+        message: "Can not verify otp",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Account verified successfully. Login to your account",
+    });
+  } catch (error: any) {
+    return res.status(400).json({ success: false, message: error.message });
+  }
+};
+
+// reset password
+export const resetPassword = async (
+  req: Request<{ id: string }>,
+  res: Response
+) => {
+  try {
+    const { id } = req.params;
+    const { password } = req.body;
+
+    const { user, accessToken, refreshToken } = await passwordReset(
+      id,
+      password
+    );
+
+    return res
+      .cookie("refreshToken", refreshToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production", // only https in prod
+        sameSite: "strict", // prevents CSRF
+        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+      })
+      .status(200)
+      .json({
+        sucess: true,
+        message: "password reset successfully",
+        user,
+        accessToken,
+      });
+  } catch (error) {}
+};
