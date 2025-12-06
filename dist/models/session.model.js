@@ -1,6 +1,6 @@
 // src/models/section.model.ts
 import mongoose, { Document, Schema, Types } from "mongoose";
-const SectionSchema = new mongoose.Schema({
+const sessionSchema = new mongoose.Schema({
     schoolId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "School",
@@ -23,5 +23,5 @@ const SectionSchema = new mongoose.Schema({
     },
 }, { timestamps: true });
 // SectionSchema.index({ tenant: 1, classId: 1, name: 1 }, { unique: true });
-export const Section = mongoose.model("Section", SectionSchema);
+export const Session = mongoose.model("Session", sessionSchema);
 //# sourceMappingURL=session.model.js.map

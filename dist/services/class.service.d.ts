@@ -1,5 +1,5 @@
 import { type IClass } from "../models/class.model.js";
-export declare const classCreation: (data: IClass, userId: string) => Promise<{
+export declare const classCreation: (data: IClass) => Promise<{
     message: string;
     createClass: import("mongoose").Document<unknown, {}, IClass, {}, {}> & IClass & Required<{
         _id: import("mongoose").Types.ObjectId;

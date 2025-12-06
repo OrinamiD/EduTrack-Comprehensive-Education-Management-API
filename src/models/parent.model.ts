@@ -1,6 +1,7 @@
 import mongoose, { Document, Schema, Types } from "mongoose";
 
 export interface IParent extends Document {
+  schoolId: Types.ObjectId;
   userId: Types.ObjectId;
   phone: string;
   address: {
@@ -9,12 +10,16 @@ export interface IParent extends Document {
     city: string;
     state: string;
     country: string;
-    image: string;
   };
+  image: string;
 }
 
 const parentSchema: Schema<IParent> = new mongoose.Schema(
   {
+    schoolId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "School",
+    },
     userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
     phone: { type: String },
     address: {
@@ -36,6 +41,9 @@ const parentSchema: Schema<IParent> = new mongoose.Schema(
       country: {
         type: String,
         default: "Nigeria",
+      },
+      image: {
+        type: String,
       },
     },
   },

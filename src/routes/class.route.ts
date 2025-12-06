@@ -1,5 +1,5 @@
 import express, { Router } from "express";
-import { isSuperAdmin } from "../middleware/auth.middleware.js";
+import { auth } from "../middleware/auth.middleware.js";
 import {
   createClass,
   selectYourClass,
@@ -7,7 +7,7 @@ import {
 
 const router: Router = express.Router();
 
-router.use("/create-class", createClass);
+router.use("/create-class", auth, createClass);
 
 router.post("/register-class", selectYourClass);
 

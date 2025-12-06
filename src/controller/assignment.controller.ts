@@ -1,57 +1,60 @@
+import type { Request, Response } from "express";
+import { assignmentCreation } from "../services/assignment.service.js";
 
-// export const handlePostAssignment = async (req, res) => {
-//   const { title, courseID, teacherID, instructions, attachment } = req.body;
+export const postAssignment = async (req: Request, res: Response) => {
+  try {
+    const { schoolId, classId, sessionId, subjectId, assignedBy, title } =
+      req.body;
 
-//   try {
-//     const existingAssignment = await Assignment.findOne({ courseID });
-//     if (existingAssignment) {
-//       return res.status(400).json({ message: "Assignment already exist" });
-//     }
+    const postedAssignment = await assignmentCreation(req.body);
 
-//     const instructor = await Assignment.findOne({ teacherID });
+    if (!postedAssignment) {
+      return res
+        .status(201)
+        .json({ success: false, message: "Can not create assignment" });
+    }
 
-//     if (!instructor) {
-//       return res.status(404).json({ message: "Instructor not registered" });
-//     }
+    return res.status(201).json({
+      success: true,
+      message: "Assignment posted successfullly",
+      postedAssignment,
+    });
+  } catch (error: any) {
+    if (error.message === "School does not exist") {
+      return res.status(404).json({ success: false, message: error.message });
+    }
+    if (error.message === "user does not exist") {
+      return res.status(404).json({ success: false, message: error.message });
+    }
+    if (error.message === "class does not exist") {
+      return res.status(404).json({ success: false, message: error.message });
+    }
+    if (error.message === "Invalid session") {
+      return res.status(400).json({ success: false, message: error.message });
+    }
+    if (error.message === "Invalid subject") {
+      return res.status(400).json({ success: false, message: error.message });
+    }
+    if (error.message === "You are not part of the school") {
+      return res.status(400).json({ success: false, message: error.message });
+    }
+    if (error.message === "You are not authorized") {
+      return res.status(400).json({ success: false, message: error.message });
+    }
+    if (error.message === "Assignment already exist") {
+      return res.status(400).json({ success: false, message: error.message });
+    }
+  }
+};
 
-//     const newAssignment = new Assignment({
-//       title,
-//       courseID,
-//       teacherID,
-//       instructions,
-//       attachment,
-//     }).save();
+// update assignment
 
-//     return res
-//       .status(201)
-//       .json({ message: "Assignment posted successfullly", newAssignment });
-//   } catch (error) {
-//     return res.status(201).json({ message: error });
-//   }
-// };
-
-// export const updateInstructor = async (req, res) => {
-//   const { id } = req.body;
-//   const { teacherID } = req.body;
-
-//   try {
-//     const existingInstructor = await Assignment.findOne({ teacherId: id });
-
-//     if (!existingInstructor) {
-//       return res.status(200).json({ message: "user Id not recognize" });
-//     }
-
-//     const updateInstructor = await Assignment.findByIdAndUpdate(
-//       id,
-//       { teacherID },
-//       { new: true }
-//     );
-//     await updateInstructor.save();
-
-//     return res
-//       .status(200)
-//       .json({ message: "updated successfully", updateInstructor });
-//   } catch (error) {
-//     return res.status(200).json({ message: error });
-//   }
-// };
+export const updateInstructor = async (req: Request, res: Response) => {
+  try {
+    return res
+      .status(200)
+      .json({ message: "updated successfully", updateInstructor });
+  } catch (error) {
+    return res.status(200).json({ message: error });
+  }
+};

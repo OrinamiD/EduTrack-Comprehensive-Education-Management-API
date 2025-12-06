@@ -1,6 +1,5 @@
 import {} from "express";
 import { forgotPassword, forgottenOTPverify, handleResendOtp, login, passwordReset, registration, verifyOtp, } from "../services/auth.service.js";
-import { error } from "console";
 export const userRegistration = async (req, res) => {
     try {
         const registeredUser = await registration(req.body);
@@ -40,7 +39,7 @@ export const userRegistration = async (req, res) => {
             });
         }
         else {
-            return res.status(404).json({
+            return res.status(500).json({
                 success: false,
                 message: error.message,
             });
@@ -121,15 +120,87 @@ export const userLogin = async (req, res) => {
             accessToken,
         });
     }
-    catch (error) { }
+    catch (error) {
+        if (error.message === "User does not exist") {
+            return res.status(404).json({
+                success: false,
+                message: error.message,
+            });
+        }
+        if (error.message === "Account not verified. Please check your email for OTP.") {
+            return res.status(400).json({
+                success: false,
+                message: error.message,
+            });
+        }
+        if (error.message === "Complete your registration") {
+            return res.status(400).json({
+                success: false,
+                message: error.message,
+            });
+        }
+        if (error.message === "Wait while admin verify your details") {
+            return res.status(400).json({
+                success: false,
+                message: error.message,
+            });
+        }
+        if (error.message === "Your account has not been approved") {
+            return res.status(400).json({
+                success: false,
+                message: error.message,
+            });
+        }
+        if (error.message === "Incorrect password or Email") {
+            return res.status(400).json({
+                success: false,
+                message: error.message,
+            });
+        }
+        else {
+            return res.status(500).json({
+                success: false,
+                message: error.message,
+            });
+        }
+    }
 };
 // resend otp
 export const resendOTP = async (req, res) => {
-    const { email } = req.body;
-    const sentOtp = await handleResendOtp(email);
-    return res
-        .status(200)
-        .json({ success: true, message: "OTP sent successful. Check your email" });
+    try {
+        const { email } = req.body;
+        const sentOtp = await handleResendOtp(email);
+        return res.status(200).json({
+            success: true,
+            message: "OTP sent successful. Check your email",
+        });
+    }
+    catch (error) {
+        if (error.message === "User does not exist") {
+            return res.status(404).json({
+                success: false,
+                message: error.message,
+            });
+        }
+        if (error.message === "You are already verified!. Login") {
+            return res.status(400).json({
+                success: false,
+                message: error.message,
+            });
+        }
+        if (error.message === "Check your email, its has not expired") {
+            return res.status(400).json({
+                success: false,
+                message: error.message,
+            });
+        }
+        else {
+            return res.status(500).json({
+                success: false,
+                message: error.message,
+            });
+        }
+    }
 };
 // forgot password
 export const forgottenPassword = async (req, res) => {
@@ -147,7 +218,20 @@ export const forgottenPassword = async (req, res) => {
             forgotPasswordData,
         });
     }
-    catch (error) { }
+    catch (error) {
+        if (error.message === "user does found") {
+            return res.status(404).json({
+                success: false,
+                message: error.message,
+            });
+        }
+        else {
+            return res.status(500).json({
+                success: false,
+                message: error.message,
+            });
+        }
+    }
 };
 export const forgottenOTPVerification = async (req, res) => {
     try {
@@ -165,7 +249,36 @@ export const forgottenOTPVerification = async (req, res) => {
         });
     }
     catch (error) {
-        return res.status(400).json({ success: false, message: error.message });
+        if (error.message === "User not found.") {
+            return res.status(404).json({
+                success: false,
+                message: error.message,
+            });
+        }
+        if (error.message === "No OTP set") {
+            return res.status(400).json({
+                success: false,
+                message: error.message,
+            });
+        }
+        if (error.message === "OTP expired") {
+            return res.status(400).json({
+                success: false,
+                message: error.message,
+            });
+        }
+        if (error.message === "Invalid OTP.") {
+            return res.status(400).json({
+                success: false,
+                message: error.message,
+            });
+        }
+        else {
+            return res.status(500).json({
+                success: false,
+                message: error.message,
+            });
+        }
     }
 };
 // reset password
@@ -189,6 +302,19 @@ export const resetPassword = async (req, res) => {
             accessToken,
         });
     }
-    catch (error) { }
+    catch (error) {
+        if (error.message === "User not found.") {
+            return res.status(404).json({
+                success: false,
+                message: error.message,
+            });
+        }
+        else {
+            return res.status(500).json({
+                success: false,
+                message: error.message,
+            });
+        }
+    }
 };
 //# sourceMappingURL=auth.controller.js.map

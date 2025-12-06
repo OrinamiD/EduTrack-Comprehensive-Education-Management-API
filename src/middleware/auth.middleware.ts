@@ -12,6 +12,7 @@ export const validateSignup = async (
   next: NextFunction
 ) => {
   const {
+    schoolId,
     role,
     firstName,
     otherName,
@@ -25,6 +26,9 @@ export const validateSignup = async (
 
   const errors = [];
 
+  if (!schoolId) {
+    errors.push("School Id is required");
+  }
   if (!role) {
     errors.push("role is required");
   }
@@ -300,5 +304,3 @@ export const isSuperAdmin = async (
     return res.status(401).json({ success: false, message: "NOT allowed" });
   }
 };
-
-

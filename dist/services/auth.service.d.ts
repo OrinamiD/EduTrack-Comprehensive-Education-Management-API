@@ -1,5 +1,14 @@
 import type { IUser } from "../models/auth.model.js";
-export declare const registration: (data: IUser) => Promise<import("mongoose").Document<unknown, {}, IUser, {}, {}> & IUser & Required<{
+export interface AUser {
+    email: string;
+    phone: string;
+    password: string;
+    firstName: string;
+    otherName: string;
+    lastName: string;
+    schoolCode: string;
+}
+export declare const registration: (data: AUser) => Promise<import("mongoose").Document<unknown, {}, IUser, {}, {}> & IUser & Required<{
     _id: import("mongoose").Types.ObjectId;
 }> & {
     __v: number;

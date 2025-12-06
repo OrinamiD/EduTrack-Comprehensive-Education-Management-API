@@ -1,5 +1,6 @@
 import User from "../models/auth.model.js";
 import { Class } from "../models/class.model.js";
+import School from "../models/school.model.js";
 import { Student, type IStudent } from "../models/student.model.js";
 import {
   juniorAdmissionNo,
@@ -10,8 +11,13 @@ export const registerStudentsInfo = async (
   data: IStudent,
   className: string
 ) => {
-  const { id, admissionNo } = data;
+  const { id, admissionNo, schoolId } = data;
 
+  const existingSchool = await School.findById(schoolId);
+
+  if (!existingSchool) {
+    throw new Error("You are not a register member of this school.");
+  }
   const user = await User.findById(id).populate(
     "school firstName otherName lastName gender DOB address"
   );

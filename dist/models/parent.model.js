@@ -1,5 +1,9 @@
 import mongoose, { Document, Schema, Types } from "mongoose";
 const parentSchema = new mongoose.Schema({
+    schoolId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "School",
+    },
     userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
     phone: { type: String },
     address: {
@@ -21,6 +25,9 @@ const parentSchema = new mongoose.Schema({
         country: {
             type: String,
             default: "Nigeria",
+        },
+        image: {
+            type: String,
         },
     },
 }, { timestamps: true });

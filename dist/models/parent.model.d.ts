@@ -1,5 +1,6 @@
 import mongoose, { Document, Types } from "mongoose";
 export interface IParent extends Document {
+    schoolId: Types.ObjectId;
     userId: Types.ObjectId;
     phone: string;
     address: {
@@ -8,8 +9,8 @@ export interface IParent extends Document {
         city: string;
         state: string;
         country: string;
-        image: string;
     };
+    image: string;
 }
 declare const Parent: mongoose.Model<IParent, {}, {}, {}, mongoose.Document<unknown, {}, IParent, {}, {}> & IParent & Required<{
     _id: Types.ObjectId;

@@ -1,5 +1,5 @@
 import mongoose, { Document, Types } from "mongoose";
-export interface ISection extends Document {
+export interface ISession extends Document {
     schoolId: Types.ObjectId;
     classId: Types.ObjectId;
     name: string;
@@ -7,7 +7,7 @@ export interface ISection extends Document {
     createdAt: Date;
     updatedAt: Date;
 }
-export declare const Section: mongoose.Model<ISection, {}, {}, {}, mongoose.Document<unknown, {}, ISection, {}, {}> & ISection & Required<{
+export declare const Session: mongoose.Model<ISession, {}, {}, {}, mongoose.Document<unknown, {}, ISession, {}, {}> & ISession & Required<{
     _id: Types.ObjectId;
 }> & {
     __v: number;

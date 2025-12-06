@@ -2,11 +2,11 @@ import { error } from "console";
 import User from "../models/auth.model.js";
 import type { ISchool } from "../models/school.model.js";
 import School from "../models/school.model.js";
+import { schoolCodeId } from "../utils/school.utils.js";
 
-export const schoolCreate = async (data: ISchool, userId: string) => {
-  const { name } = data;
-
-  const user = await User.findById(userId);
+export const schoolCreate = async (data: ISchool) => {
+  const { name, ownerId } = data;
+  const user = await User.findById(ownerId);
 
   if (!user) {
     throw new Error("User does not exist");
@@ -22,15 +22,19 @@ export const schoolCreate = async (data: ISchool, userId: string) => {
     throw new Error("School already exist");
   }
 
+  const code = await schoolCodeId();
+
   const newSchool = await School.create({
     ...data,
-    ownerId: userId,
+    ownerId: user?.id,
+    schoolCode: code,
   });
 
   await newSchool.save();
 
   if (newSchool.id) {
     user.hasSchoolId = true;
+    await user.save();
   }
 
   return { school: newSchool, user };

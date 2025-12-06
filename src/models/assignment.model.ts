@@ -6,10 +6,12 @@ export interface IAssignment extends Document {
   title: string;
   description?: string;
   classId?: Types.ObjectId;
-  sectionId?: Types.ObjectId;
+  sessionId?: Types.ObjectId;
   subjectId?: Types.ObjectId;
   assignedBy?: Types.ObjectId;
+  startDate: Date;
   dueDate?: Date;
+  isaActive: boolean;
   maxScore?: number;
   createdAt: Date;
   updatedAt: Date;
@@ -34,7 +36,7 @@ const assignmentSchema: Schema<IAssignment> = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Class",
     },
-    sectionId: {
+    sessionId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Section",
     },
@@ -46,8 +48,16 @@ const assignmentSchema: Schema<IAssignment> = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
+    startDate: {
+      type: Date,
+      default: null,
+    },
     dueDate: {
       type: Date,
+    },
+    isaActive: {
+      type: Boolean,
+      default: false,
     },
     maxScore: {
       type: Number,

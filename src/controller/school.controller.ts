@@ -1,15 +1,11 @@
 import type { Request, Response } from "express";
 import { schoolCreate } from "../services/school.service.js";
 
-export const createSchool = async (
-  req: Request<{ userId: string }>,
-  res: Response
-) => {
+export const createSchool = async (req: Request, res: Response) => {
   try {
-    const { userId } = req.params;
-    const { data } = req.body;
-
-    const { school, user } = await schoolCreate(data, userId);
+    const { name, ownerId, schoolEmail, schoolNumber, logo, image, address } =
+      req.body;
+    const { school, user } = await schoolCreate(req.body);
 
     return res.status(400).json({
       success: false,
@@ -20,7 +16,7 @@ export const createSchool = async (
         schoolEmail: school.schoolEmail,
         schoolNumber: school.schoolNumber,
         ownerId: user.id,
-        ownerName: `${user.firstName}${user.otherName} ${user.lastName}`,
+        ownerName: `${user.firstName} ${user.otherName} ${user.lastName}`,
       },
     });
   } catch (error: any) {

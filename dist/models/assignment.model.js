@@ -18,7 +18,7 @@ const assignmentSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Class",
     },
-    sectionId: {
+    sessionId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Section",
     },
@@ -30,8 +30,16 @@ const assignmentSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
     },
+    startDate: {
+        type: Date,
+        default: null,
+    },
     dueDate: {
         type: Date,
+    },
+    isaActive: {
+        type: Boolean,
+        default: false,
     },
     maxScore: {
         type: Number,

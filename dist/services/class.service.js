@@ -1,12 +1,15 @@
-import { error } from "console";
 import User from "../models/auth.model.js";
 import { Class } from "../models/class.model.js";
 import School from "../models/school.model.js";
 import { JSS1Code, JSS2Code, JSS3Code, SS1Code, SS2Code, SS3Code, } from "../utils/class.code.utils.js";
 import Department from "../models/department.model.js";
 import { Student } from "../models/student.model.js";
-export const classCreation = async (data, userId) => {
-    const { className } = data;
+export const classCreation = async (data) => {
+    const { className, userId, schoolId } = data;
+    const existingSchool = await School.findById(schoolId);
+    if (!existingSchool) {
+        throw new Error("School does not exist");
+    }
     const user = await User.findById(userId);
     if (!user) {
         throw new Error("User does not exist");
@@ -85,14 +88,22 @@ export const chooseYourClass = async (data, userId) => {
     if (dept.classId?.toString() !== classData._id.toString()) {
         throw new Error("This department does not belong to the selected class");
     }
-    // 6. Assign class and department to student
-    student.classId = classData._id;
-    student.departmentId = dept._id;
-    student.schoolId = schoolId;
+    if ((user.role === "student" && classData.className === "JSS1") ||
+        classData.className === "JSS2" ||
+        classData.className === "JSS3") {
+        student.classId = classData._id;
+        student.schoolId = schoolId;
+    }
+    else {
+        // 6. Assign class and department to student
+        student.classId = classData._id;
+        student.departmentId = dept._id;
+        student.schoolId = schoolId;
+    }
     await student.save();
     if (student.admissionNo) {
-        user.adminVerification = true;
         user.hasClassId = true;
+        user.adminVerification = true;
     }
     return {
         message: `Class ${className} selected successfully`,

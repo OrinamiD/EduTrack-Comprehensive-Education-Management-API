@@ -1,7 +1,7 @@
 // src/models/section.model.ts
 import mongoose, { Document, Schema, Types } from "mongoose";
 
-export interface ISection extends Document {
+export interface ISession extends Document {
   schoolId: Types.ObjectId;
   classId: Types.ObjectId;
   name: string; // e.g., "A", "B"
@@ -10,7 +10,7 @@ export interface ISection extends Document {
   updatedAt: Date;
 }
 
-const SectionSchema: Schema<ISection> = new mongoose.Schema(
+const sessionSchema: Schema<ISession> = new mongoose.Schema(
   {
     schoolId: {
       type: mongoose.Schema.Types.ObjectId,
@@ -38,4 +38,4 @@ const SectionSchema: Schema<ISection> = new mongoose.Schema(
 
 // SectionSchema.index({ tenant: 1, classId: 1, name: 1 }, { unique: true });
 
-export const Section = mongoose.model<ISection>("Section", SectionSchema);
+export const Session = mongoose.model<ISession>("Session", sessionSchema);

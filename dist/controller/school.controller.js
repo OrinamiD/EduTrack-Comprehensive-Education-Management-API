@@ -1,9 +1,8 @@
 import { schoolCreate } from "../services/school.service.js";
 export const createSchool = async (req, res) => {
     try {
-        const { userId } = req.params;
-        const { data } = req.body;
-        const { school, user } = await schoolCreate(data, userId);
+        const { name, ownerId, schoolEmail, schoolNumber, logo, image, address } = req.body;
+        const { school, user } = await schoolCreate(req.body);
         return res.status(400).json({
             success: false,
             message: "school created successful",
@@ -13,10 +12,35 @@ export const createSchool = async (req, res) => {
                 schoolEmail: school.schoolEmail,
                 schoolNumber: school.schoolNumber,
                 ownerId: user.id,
-                ownerName: `${user.firstName}${user.otherName} ${user.lastName}`,
+                ownerName: `${user.firstName} ${user.otherName} ${user.lastName}`,
             },
         });
     }
-    catch (error) { }
+    catch (error) {
+        if (error.message === "User does not exist") {
+            return res.status(404).json({
+                success: false,
+                messsage: error.message,
+            });
+        }
+        if (error.message === "Only the owner can perform this") {
+            return res.status(400).json({
+                success: false,
+                messsage: error.message,
+            });
+        }
+        if (error.message === "School already exist") {
+            return res.status(400).json({
+                success: false,
+                messsage: error.message,
+            });
+        }
+        else {
+            return res.status(500).json({
+                success: false,
+                messsage: error.message,
+            });
+        }
+    }
 };
 //# sourceMappingURL=school.controller.js.map

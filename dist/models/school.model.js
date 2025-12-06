@@ -16,12 +16,16 @@ const schoolSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    school: {
+        type: mongoose.Schema.Types.ObjectId,
+    },
     logo: {
         type: String,
-        required: true,
+        // required: true,
     },
     image: {
         type: String,
+        // required: true,
     },
     address: {
         street: {

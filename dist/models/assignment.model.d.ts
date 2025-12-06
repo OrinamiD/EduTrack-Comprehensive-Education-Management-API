@@ -4,10 +4,12 @@ export interface IAssignment extends Document {
     title: string;
     description?: string;
     classId?: Types.ObjectId;
-    sectionId?: Types.ObjectId;
+    sessionId?: Types.ObjectId;
     subjectId?: Types.ObjectId;
     assignedBy?: Types.ObjectId;
+    startDate: Date;
     dueDate?: Date;
+    isaActive: boolean;
     maxScore?: number;
     createdAt: Date;
     updatedAt: Date;

@@ -26,6 +26,46 @@ export const staffRegistration = async (req: Request, res: Response) => {
       .status(200)
       .json({ success: false, message: "successful", savedStaff });
   } catch (error: any) {
-    
+    if (error.message === "You are not a member of this school") {
+      return res.status(400).json({
+        success: false,
+        messsage: error.message,
+      });
+    }
+    if (error.message === "User not found") {
+      return res.status(404).json({
+        success: false,
+        messsage: error.message,
+      });
+    }
+    if (error.message === "keep off") {
+      return res.status(400).json({
+        success: false,
+        messsage: error.message,
+      });
+    }
+    if (error.message === "No such department") {
+      return res.status(404).json({
+        success: false,
+        messsage: error.message,
+      });
+    }
+    if (error.message === "Your a staff. Login") {
+      return res.status(400).json({
+        success: false,
+        messsage: error.message,
+      });
+    }
+    if (error.message === "Invalid department name") {
+      return res.status(400).json({
+        success: false,
+        messsage: error.message,
+      });
+    } else {
+      return res.status(500).json({
+        success: false,
+        messsage: error.message,
+      });
+    }
   }
 };

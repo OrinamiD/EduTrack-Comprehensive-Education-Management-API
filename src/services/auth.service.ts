@@ -9,10 +9,28 @@ import { Student } from "../models/student.model.js";
 
 import { resendOtpEmail } from "../emails/resend.otp.email.js";
 import { forgotPasswordEmail } from "../emails/forgotten.password.email.js";
+import School from "../models/school.model.js";
+
+export interface AUser {
+  email: string;
+  phone: string;
+  password: string;
+  firstName: string;
+  otherName: string;
+  lastName: string;
+  schoolCode: string;
+}
 
 // registration
-export const registration = async (data: IUser) => {
-  const { email, phone, password, firstName, otherName, lastName } = data;
+export const registration = async (data: AUser) => {
+  const { email, phone, password, firstName, otherName, lastName, schoolCode } =
+    data;
+
+  const school = await School.findById({ schoolCode });
+
+  if (!school) {
+    throw new Error("You are not a registered member of this college");
+  }
 
   const user = await User.findOne({
     $or: [{ email }, { phone }],
@@ -137,6 +155,7 @@ export const login = async (
   await user.save();
 
   (user as any).password = undefined;
+
   // access token
   const accessToken = jwt.sign(
     { role: user.role, id: user._id },

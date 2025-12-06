@@ -1,0 +1,15 @@
+export declare const mathematics: () => Promise<string>;
+export declare const english: () => Promise<string>;
+export declare const basicScience: () => Promise<string>;
+export declare const basicTech: () => Promise<string>;
+export declare const CRS: () => Promise<string>;
+export declare const furtherMathematics: () => Promise<string>;
+export declare const socialStudies: () => Promise<string>;
+export declare const chemistry: () => Promise<string>;
+export declare const physics: () => Promise<string>;
+export declare const biology: () => Promise<string>;
+export declare const agriculture: () => Promise<string>;
+export declare const economics: () => Promise<string>;
+export declare const commerce: () => Promise<string>;
+export declare const goverment: () => Promise<string>;
+//# sourceMappingURL=subject.code.utils.d.ts.map

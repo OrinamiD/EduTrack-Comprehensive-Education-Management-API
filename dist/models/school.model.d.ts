@@ -4,6 +4,7 @@ export interface ISchool extends Document {
     ownerId: Types.ObjectId;
     schoolEmail: string;
     schoolNumber: string;
+    school: Types.ObjectId;
     logo: string;
     image: string;
     address: {

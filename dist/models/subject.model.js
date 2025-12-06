@@ -10,12 +10,48 @@ const SubjectSchema = new Schema({
     name: {
         type: String,
         required: true,
+        enum: [
+            "maths",
+            "english",
+            "basic-science",
+            "basic-tech",
+            "CRS",
+            "social-studies",
+            "furtherMathematics",
+            "chemistry",
+            "physics",
+            "biology",
+            "agriculture",
+            "economics",
+            "commerce",
+            "goverment",
+        ],
+    },
+    classId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Class",
+    },
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+    },
+    createdBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
     },
     code: {
         type: String,
     },
     description: {
         type: String,
+    },
+    deleted: {
+        type: Boolean,
+        default: false,
+    },
+    deletedAt: {
+        type: Date,
+        default: null,
     },
     registered: { type: Boolean },
 }, { timestamps: true });

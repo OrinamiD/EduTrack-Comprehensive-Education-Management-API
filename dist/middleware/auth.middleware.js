@@ -3,8 +3,11 @@ import joi from "joi";
 import User from "../models/auth.model.js";
 // validate signup
 export const validateSignup = async (req, res, next) => {
-    const { role, firstName, otherName, lastName, email, password, gender, phone, DOB, } = req.body;
+    const { schoolId, role, firstName, otherName, lastName, email, password, gender, phone, DOB, } = req.body;
     const errors = [];
+    if (!schoolId) {
+        errors.push("School Id is required");
+    }
     if (!role) {
         errors.push("role is required");
     }

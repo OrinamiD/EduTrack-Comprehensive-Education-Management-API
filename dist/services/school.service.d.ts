@@ -1,5 +1,5 @@
 import type { ISchool } from "../models/school.model.js";
-export declare const schoolCreate: (data: ISchool, userId: string) => Promise<{
+export declare const schoolCreate: (data: ISchool) => Promise<{
     school: import("mongoose").Document<unknown, {}, ISchool, {}, {}> & ISchool & Required<{
         _id: import("mongoose").Types.ObjectId;
     }> & {

@@ -1,1 +1,1 @@
-{"version":3,"file":"school.controller.d.ts","sourceRoot":"","sources":["../../src/controller/school.controller.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,OAAO,EAAE,QAAQ,EAAE,MAAM,SAAS,CAAC;AAGjD,eAAO,MAAM,YAAY,GACvB,KAAK,OAAO,CAAC;IAAE,MAAM,EAAE,MAAM,CAAA;CAAE,CAAC,EAChC,KAAK,QAAQ,4DAqBd,CAAC"}
+{"version":3,"file":"school.controller.d.ts","sourceRoot":"","sources":["../../src/controller/school.controller.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,OAAO,EAAE,QAAQ,EAAE,MAAM,SAAS,CAAC;AAGjD,eAAO,MAAM,YAAY,GAAU,KAAK,OAAO,EAAE,KAAK,QAAQ,gDA2C7D,CAAC"}

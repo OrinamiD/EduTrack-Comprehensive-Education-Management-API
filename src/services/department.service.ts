@@ -1,9 +1,16 @@
 import User from "../models/auth.model.js";
 import type { IDepartment } from "../models/department.model.js";
 import Department from "../models/department.model.js";
+import School from "../models/school.model.js";
 
 export const departmentCreation = async (data: IDepartment, userId: String) => {
   const { name } = data;
+
+  // const school = await School.findById(userId);
+
+  // if (!school) {
+  //   throw new Error("You are not a registered member of this college");
+  // }
 
   const isSuperAdmin = await User.findById(userId);
 

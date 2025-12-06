@@ -6,9 +6,14 @@ import { generateOTP, hashPassword } from "../utils/password.utils.js";
 import { Student } from "../models/student.model.js";
 import { resendOtpEmail } from "../emails/resend.otp.email.js";
 import { forgotPasswordEmail } from "../emails/forgotten.password.email.js";
+import School from "../models/school.model.js";
 // registration
 export const registration = async (data) => {
-    const { email, phone, password, firstName, otherName, lastName } = data;
+    const { email, phone, password, firstName, otherName, lastName, schoolCode } = data;
+    const school = await School.findById({ schoolCode });
+    if (!school) {
+        throw new Error("You are not a registered member of this college");
+    }
     const user = await User.findOne({
         $or: [{ email }, { phone }],
     }).populate("school");
